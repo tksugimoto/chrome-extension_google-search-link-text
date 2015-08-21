@@ -29,7 +29,7 @@ chrome.contextMenus.create({
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.method === "search") {
 		var text = request.text;
-		var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + text;
+		var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
 		chrome.tabs.create({
 			url: url,
 			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
