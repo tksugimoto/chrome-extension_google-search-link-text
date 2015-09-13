@@ -10,8 +10,7 @@ chrome.contextMenus.create({
 			var elems = document.getElementsByTagName("a");
 			for (var i = 0, len = elems.length; i < len; i++) {
 				var elem = elems[i];
-				if (elem.getElementsByTagName("img").length === 0
-				 && elem.innerText.replace(/\s/g, "")
+				if (elem.innerText.replace(/\s/g, "")
 				 && elem.href === "linkUrl") {
 					chrome.runtime.sendMessage({
 						"method": "search",
