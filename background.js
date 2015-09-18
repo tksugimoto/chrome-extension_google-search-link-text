@@ -3,6 +3,11 @@
 chrome.contextMenus.create({
 	title: "リンクテキストでグーグル検索",
 	contexts: ["link"],
+	documentUrlPatterns: [
+		"http://*/*",
+		"https://*/*",
+		"file:///*"
+	],
 	onclick: function (info, tab){
 		var linkUrl = info.linkUrl;
 		
