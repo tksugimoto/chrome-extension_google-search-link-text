@@ -1,4 +1,5 @@
 
+var ID_SEARCH_AT_GOOGLE = "search-at-google";
 
 chrome.contextMenus.create({
 	title: "リンクテキストでグーグル検索",
@@ -8,7 +9,11 @@ chrome.contextMenus.create({
 		"https://*/*",
 		"file:///*"
 	],
-	onclick: function (info, tab){
+	id: ID_SEARCH_AT_GOOGLE
+});
+
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
 		var linkUrl = info.linkUrl;
 		
 		function content_script(){
