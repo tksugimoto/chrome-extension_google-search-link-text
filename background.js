@@ -30,15 +30,15 @@ chrome.contextMenus.create({
 			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
 		});
 	}
-}, function (){});
+});
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender) {
 	if (request.method === "search") {
 		var text = request.text;
 		var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
 		chrome.tabs.create({
 			url: url,
 			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
-		}, function (){});
+		});
 	}
 });
