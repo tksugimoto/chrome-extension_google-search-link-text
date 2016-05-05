@@ -1,16 +1,21 @@
 
 var ID_SEARCH_AT_GOOGLE = "search-at-google";
 
-chrome.contextMenus.create({
-	title: "リンクテキストでグーグル検索",
-	contexts: ["link"],
-	documentUrlPatterns: [
-		"http://*/*",
-		"https://*/*",
-		"file:///*"
-	],
-	id: ID_SEARCH_AT_GOOGLE
-});
+function createContextMenus() {
+	chrome.contextMenus.create({
+		title: "リンクテキストでグーグル検索",
+		contexts: ["link"],
+		documentUrlPatterns: [
+			"http://*/*",
+			"https://*/*",
+			"file:///*"
+		],
+		id: ID_SEARCH_AT_GOOGLE
+	});
+}
+
+chrome.runtime.onInstalled.addListener(createContextMenus);
+chrome.runtime.onStartup.addListener(createContextMenus);
 
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
