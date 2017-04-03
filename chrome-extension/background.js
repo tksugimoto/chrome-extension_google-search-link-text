@@ -1,7 +1,7 @@
 
 var ID_SEARCH_AT_GOOGLE = "search-at-google";
 
-function createContextMenus() {
+const createContextMenus = () => {
 	chrome.contextMenus.create({
 		title: "リンクテキストでグーグル検索",
 		contexts: ["link"],
@@ -12,16 +12,16 @@ function createContextMenus() {
 		],
 		id: ID_SEARCH_AT_GOOGLE
 	});
-}
+};
 
 chrome.runtime.onInstalled.addListener(createContextMenus);
 chrome.runtime.onStartup.addListener(createContextMenus);
 
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
 		var linkUrl = info.linkUrl;
 		
-		function content_script(){
+		const content_script = () => {
 			var elems = document.getElementsByTagName("a");
 			for (var i = 0, len = elems.length; i < len; i++) {
 				var elem = elems[i];
@@ -34,7 +34,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 					break;
 				}
 			}
-		}
+		};
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(null, {
 			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
@@ -42,7 +42,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	}
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender) {
+chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === "search") {
 		var text = request.text;
 		var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
