@@ -1,5 +1,5 @@
 
-var ID_SEARCH_AT_GOOGLE = "search-at-google";
+const ID_SEARCH_AT_GOOGLE = "search-at-google";
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
@@ -19,12 +19,12 @@ chrome.runtime.onStartup.addListener(createContextMenu);
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
-		var linkUrl = info.linkUrl;
+		const linkUrl = info.linkUrl;
 		
 		const content_script = () => {
-			var elems = document.getElementsByTagName("a");
-			for (var i = 0, len = elems.length; i < len; i++) {
-				var elem = elems[i];
+			const elems = document.getElementsByTagName("a");
+			for (let i = 0, len = elems.length; i < len; i++) {
+				const elem = elems[i];
 				if (elem.innerText.replace(/\s/g, "")
 				 && elem.href === "linkUrl") {
 					chrome.runtime.sendMessage({
@@ -44,8 +44,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === "search") {
-		var text = request.text;
-		var url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
+		const text = request.text;
+		const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
 		chrome.tabs.create({
 			url: url,
 			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
