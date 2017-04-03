@@ -1,7 +1,7 @@
 
 var ID_SEARCH_AT_GOOGLE = "search-at-google";
 
-const createContextMenus = () => {
+const createContextMenu = () => {
 	chrome.contextMenus.create({
 		title: "リンクテキストでグーグル検索",
 		contexts: ["link"],
@@ -14,8 +14,8 @@ const createContextMenus = () => {
 	});
 };
 
-chrome.runtime.onInstalled.addListener(createContextMenus);
-chrome.runtime.onStartup.addListener(createContextMenus);
+chrome.runtime.onInstalled.addListener(createContextMenu);
+chrome.runtime.onStartup.addListener(createContextMenu);
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
