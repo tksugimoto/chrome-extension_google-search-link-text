@@ -42,13 +42,20 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 	}
 });
 
+const search = (searchWord, {currentTabId}) => {
+	const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(searchWord);
+	chrome.tabs.create({
+		url: url,
+		openerTabId: currentTabId // chrome.tabs.onCreatedのloadingでは時差がある
+	});
+};
+
 chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === "search") {
 		const text = request.text;
-		const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(text);
-		chrome.tabs.create({
-			url: url,
-			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
-		});
+		const option = {
+			currentTabId: sender.tab.id
+		};
+		search(text, option);
 	}
 });
