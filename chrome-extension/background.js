@@ -43,7 +43,17 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 const search = (searchWord, {currentTabId}) => {
-	const url = "https://www.google.co.jp/search?hl=ja&complete=0&q=" + encodeURIComponent(searchWord);
+	const queryObject = {
+		hl: "ja",
+		complete: 0,
+		q: searchWord
+	};
+	const querys = Object.entries(queryObject).map(([key, value]) => {
+		return `${key}=${encodeURIComponent(value)}`;
+	});
+	const queryString = querys.join("&");
+
+	const url = `https://www.google.co.jp/search?${queryString}`;
 	chrome.tabs.create({
 		url: url,
 		openerTabId: currentTabId // chrome.tabs.onCreatedのloadingでは時差がある
