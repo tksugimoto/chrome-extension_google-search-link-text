@@ -42,7 +42,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 	}
 });
 
-const search = (searchWord, {currentTabId}) => {
+const generateSearchUrl = searchWord => {
 	const queryObject = {
 		hl: "ja",
 		complete: 0,
@@ -54,18 +54,16 @@ const search = (searchWord, {currentTabId}) => {
 	const queryString = querys.join("&");
 
 	const url = `https://www.google.co.jp/search?${queryString}`;
-	chrome.tabs.create({
-		url: url,
-		openerTabId: currentTabId // chrome.tabs.onCreatedのloadingでは時差がある
-	});
+	return url;
 };
 
 chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === "search") {
 		const text = request.text;
-		const option = {
-			currentTabId: sender.tab.id
-		};
-		search(text, option);
+		const searchUrl = generateSearchUrl(text);
+		chrome.tabs.create({
+			url: searchUrl,
+			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
+		});
 	}
 });
