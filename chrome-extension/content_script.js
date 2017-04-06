@@ -15,6 +15,7 @@
 	chrome.runtime.onMessage.addListener(request => {
 		if (request.method === "searchLinkText") {
 			const linkText = searchLinkText(request.linkUrl);
+			if (!linkText) return;
 			chrome.runtime.sendMessage({
 				"method": "search",
 				"text": linkText
