@@ -20,24 +20,16 @@ chrome.runtime.onStartup.addListener(createContextMenu);
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
 		const linkUrl = info.linkUrl;
-		
-		const content_script = () => {
-			const elems = document.getElementsByTagName("a");
-			for (let i = 0, len = elems.length; i < len; i++) {
-				const elem = elems[i];
-				if (elem.innerText.replace(/\s/g, "")
-				 && elem.href === "linkUrl") {
-					chrome.runtime.sendMessage({
-						"method": "search",
-						"text": elem.innerText
-					});
-					break;
-				}
-			}
-		};
+		const activeTabId = tab.id;
+
 		// permissionsにURL or activeTabが必要
-		chrome.tabs.executeScript(null, {
-			"code": "(" + content_script.toString().replace("linkUrl", linkUrl) + ")()"
+		chrome.tabs.executeScript(activeTabId, {
+			file: "content_script.js"
+		}, () => {
+			chrome.tabs.sendMessage(activeTabId, {
+				method: "searchLinkText",
+				linkUrl
+			});
 		});
 	}
 });
