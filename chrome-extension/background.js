@@ -52,14 +52,33 @@ const generateSearchUrl = searchWord => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender) => {
-	if (request.method === "linkTexts") {
-		const linkTexts = request.texts;
-		// とりあえず既存の動作（1件目）に合わせる
-		const linkText = linkTexts[0];
+	if (request.method === "selectedLinkText") {
+		const linkText = request.text;
 		const searchUrl = generateSearchUrl(linkText);
 		chrome.tabs.create({
 			url: searchUrl,
-			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
+			openerTabId: request.opts.originalSenderTabid // chrome.tabs.onCreatedのloadingでは時差がある
 		});
+	} else if (request.method === "linkTexts") {
+		const linkTexts = request.texts;
+		if (linkTexts.length === 1) {
+			const linkText = linkTexts[0];
+			const searchUrl = generateSearchUrl(linkText);
+			chrome.tabs.create({
+				url: searchUrl,
+				openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
+			});
+		} else if (linkTexts.length >= 2) {
+			localStorage.linkTexts = JSON.stringify(linkTexts);
+			localStorage.method = "selectedLinkText";
+			localStorage.opts = JSON.stringify({
+				originalSenderTabid: sender.tab.id
+			});
+			chrome.windows.create({
+				url: "text_selector.html",
+				type: "popup",
+				state: "fullscreen"
+			});
+		}
 	}
 });
