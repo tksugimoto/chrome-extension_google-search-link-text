@@ -21,15 +21,17 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === ID_SEARCH_AT_GOOGLE) {
 		const linkUrl = info.linkUrl;
 		const activeTabId = tab.id;
+		const frameId = info.frameId;
 
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
+			frameId,
 			file: "content_script.js"
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: "searchLinkText",
 				linkUrl
-			});
+			}, {frameId});
 		});
 	}
 });
