@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 		const searchUrl = generateSearchUrl(linkText);
 		chrome.tabs.create({
 			url: searchUrl,
-			openerTabId: request.opts.originalSenderTabid // chrome.tabs.onCreatedのloadingでは時差がある
+			openerTabId: request.originalSenderTabid // chrome.tabs.onCreatedのloadingでは時差がある
 		});
 	} else if (request.method === "linkTexts") {
 		const linkTexts = request.texts;
@@ -69,10 +69,12 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
 			});
 		} else if (linkTexts.length >= 2) {
-			localStorage.linkTexts = JSON.stringify(linkTexts);
-			localStorage.method = "selectedLinkText";
-			localStorage.opts = JSON.stringify({
-				originalSenderTabid: sender.tab.id
+			localStorage.textSelectorData = JSON.stringify({
+				linkTexts,
+				returnMessageBase: {
+					method: "selectedLinkText",
+					originalSenderTabid: sender.tab.id
+				}
 			});
 			chrome.windows.create({
 				url: "text_selector.html",
