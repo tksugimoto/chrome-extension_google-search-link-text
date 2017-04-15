@@ -26,10 +26,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		// permissionsにURL or activeTabが必要
 		chrome.tabs.executeScript(activeTabId, {
 			frameId,
-			file: "content_script.js"
+			file: "search_link_texts.js"
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
-				method: "searchLinkText",
+				method: "searchLinkTexts",
 				linkUrl
 			}, {frameId});
 		});
@@ -52,9 +52,11 @@ const generateSearchUrl = searchWord => {
 };
 
 chrome.runtime.onMessage.addListener((request, sender) => {
-	if (request.method === "search") {
-		const text = request.text;
-		const searchUrl = generateSearchUrl(text);
+	if (request.method === "linkTexts") {
+		const linkTexts = request.texts;
+		// とりあえず既存の動作（1件目）に合わせる
+		const linkText = linkTexts[0];
+		const searchUrl = generateSearchUrl(linkText);
 		chrome.tabs.create({
 			url: searchUrl,
 			openerTabId: sender.tab.id // chrome.tabs.onCreatedのloadingでは時差がある
