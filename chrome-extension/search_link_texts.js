@@ -4,9 +4,7 @@
 
 	let latestContextMenuTriggeredAnchorElement = null;
 	document.addEventListener("contextmenu", evt => {
-		if (evt.target.tagName === "A") {
-			latestContextMenuTriggeredAnchorElement = evt.target;
-		}
+		latestContextMenuTriggeredAnchorElement = evt.path.find(e => e.tagName === "A");
 	}, /* useCapture = */ true);
 
 	const uniq = array => {
