@@ -31,3 +31,9 @@ if (linkTexts.length === 0) {
 document.getElementById("close").addEventListener("click", () => {
 	window.close();
 });
+
+document.body.addEventListener("keydown", evt => {
+	if (evt.key === "Escape") {
+		window.close();
+	}
+});
