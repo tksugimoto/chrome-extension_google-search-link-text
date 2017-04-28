@@ -27,3 +27,13 @@ if (linkTexts.length === 0) {
 		list_container.append(listItem);
 	});
 }
+
+document.getElementById("close").addEventListener("click", () => {
+	window.close();
+});
+
+document.body.addEventListener("keydown", evt => {
+	if (evt.key === "Escape") {
+		window.close();
+	}
+});
