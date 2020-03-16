@@ -3,8 +3,8 @@
 	window.isAlreadyPrepared = true;
 
 	let latestContextMenuTriggeredAnchorElement = null;
-	document.addEventListener("contextmenu", evt => {
-		latestContextMenuTriggeredAnchorElement = evt.path.find(e => e.tagName === "A");
+	document.addEventListener('contextmenu', evt => {
+		latestContextMenuTriggeredAnchorElement = evt.path.find(e => e.tagName === 'A');
 	}, /* useCapture = */ true);
 
 	const uniq = array => {
@@ -13,7 +13,7 @@
 	};
 
 	const searchLinkTexts = linkUrl => {
-		const links = document.getElementsByTagName("a");
+		const links = document.getElementsByTagName('a');
 		return Array.from(links).filter(link => {
 			return link.href === linkUrl;
 		}).map(link => {
@@ -23,15 +23,15 @@
 		});
 	};
 	chrome.runtime.onMessage.addListener(request => {
-		if (request.method === "searchLinkTexts") {
+		if (request.method === 'searchLinkTexts') {
 			if (latestContextMenuTriggeredAnchorElement
 			 && latestContextMenuTriggeredAnchorElement.href === request.linkUrl
 			) {
 				const linkText = latestContextMenuTriggeredAnchorElement.innerText.trim();
 				if (linkText) {
 					chrome.runtime.sendMessage({
-						method: "linkTexts",
-						texts: [linkText]
+						method: 'linkTexts',
+						texts: [linkText],
 					});
 					return;
 				}
@@ -39,8 +39,8 @@
 			const linkTexts = searchLinkTexts(request.linkUrl);
 			const uniqueLinkTexts = uniq(linkTexts);
 			chrome.runtime.sendMessage({
-				method: "linkTexts",
-				texts: uniqueLinkTexts
+				method: 'linkTexts',
+				texts: uniqueLinkTexts,
 			});
 		}
 	});

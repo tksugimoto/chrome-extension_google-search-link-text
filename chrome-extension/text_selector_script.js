@@ -1,23 +1,23 @@
 
 const {
 	linkTexts = [],
-	returnMessageBase = {}
-} = JSON.parse(localStorage.textSelectorData || "{}");
+	returnMessageBase = {},
+} = JSON.parse(localStorage.textSelectorData || '{}');
 
-const list_container = document.getElementById("list_container");
+const list_container = document.getElementById('list_container');
 
 if (linkTexts.length === 0) {
 	window.close();
 } else {
 	linkTexts.forEach(linkText => {
-		const listItem = document.createElement("li");
+		const listItem = document.createElement('li');
 
-		const selectButton = document.createElement("button");
-		selectButton.classList.add("select-button");
+		const selectButton = document.createElement('button');
+		selectButton.classList.add('select-button');
 		selectButton.append(linkText);
-		selectButton.addEventListener("click", () => {
+		selectButton.addEventListener('click', () => {
 			const message = Object.assign({}, returnMessageBase, {
-				text: linkText
+				text: linkText,
 			});
 			chrome.runtime.sendMessage(message);
 			window.close();
@@ -28,12 +28,12 @@ if (linkTexts.length === 0) {
 	});
 }
 
-document.getElementById("close").addEventListener("click", () => {
+document.getElementById('close').addEventListener('click', () => {
 	window.close();
 });
 
-document.body.addEventListener("keydown", evt => {
-	if (evt.key === "Escape") {
+document.body.addEventListener('keydown', evt => {
+	if (evt.key === 'Escape') {
 		window.close();
 	}
 });
