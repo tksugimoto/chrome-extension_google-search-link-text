@@ -24,9 +24,7 @@
 	};
 	chrome.runtime.onMessage.addListener(request => {
 		if (request.method === 'searchLinkTexts') {
-			if (latestContextMenuTriggeredAnchorElement
-			 && latestContextMenuTriggeredAnchorElement.href === request.linkUrl
-			) {
+			if (latestContextMenuTriggeredAnchorElement && latestContextMenuTriggeredAnchorElement.href === request.linkUrl) {
 				const linkText = latestContextMenuTriggeredAnchorElement.innerText.trim();
 				if (linkText) {
 					chrome.runtime.sendMessage({
