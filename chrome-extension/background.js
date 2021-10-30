@@ -3,7 +3,7 @@ const ID_SEARCH_AT_GOOGLE = 'search-at-google';
 
 const createContextMenu = () => {
 	chrome.contextMenus.create({
-		title: 'リンクテキストでグーグル検索',
+		title: 'リンクテキストでグーグル検索 (&S)',
 		contexts: ['link'],
 		documentUrlPatterns: [
 			'http://*/*',
