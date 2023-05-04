@@ -24,9 +24,16 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 		const frameId = info.frameId;
 
 		// permissionsにURL or activeTabが必要
-		chrome.tabs.executeScript(activeTabId, {
-			frameId,
-			file: 'search_link_texts.js',
+		chrome.scripting.executeScript({
+			target: {
+				tabId: activeTabId,
+				frameIds: [
+					frameId,
+				],
+			},
+			files: [
+				'search_link_texts.js',
+			],
 		}, () => {
 			chrome.tabs.sendMessage(activeTabId, {
 				method: 'searchLinkTexts',
@@ -55,9 +62,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === 'selectedLinkText') {
 		const linkText = request.text;
 		const searchUrl = generateSearchUrl(linkText);
-		chrome.tabs.create({
-			url: searchUrl,
-			openerTabId: request.originalSenderTabid, // chrome.tabs.onCreatedのloadingでは時差がある
+		chrome.tabs.remove(sender.tab.id).then(() => {
+			chrome.tabs.create({
+				url: searchUrl,
+				openerTabId: request.originalSenderTabid, // chrome.tabs.onCreatedのloadingでは時差がある
+			});
 		});
 	} else if (request.method === 'linkTexts') {
 		const linkTexts = request.texts;
@@ -69,17 +78,20 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				openerTabId: sender.tab.id, // chrome.tabs.onCreatedのloadingでは時差がある
 			});
 		} else if (linkTexts.length >= 2) {
-			localStorage.textSelectorData = JSON.stringify({
-				linkTexts,
-				returnMessageBase: {
-					method: 'selectedLinkText',
-					originalSenderTabid: sender.tab.id,
+			chrome.storage.local.set({
+				textSelectorData: {
+					linkTexts,
+					returnMessageBase: {
+						method: 'selectedLinkText',
+						originalSenderTabid: sender.tab.id,
+					},
 				},
-			});
-			chrome.windows.create({
-				url: 'text_selector.html',
-				type: 'popup',
-				state: 'fullscreen',
+			}, () => {
+				chrome.windows.create({
+					url: 'text_selector.html',
+					type: 'popup',
+					state: 'fullscreen',
+				});
 			});
 		}
 	}

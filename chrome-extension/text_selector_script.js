@@ -1,14 +1,18 @@
 
-const {
-	linkTexts = [],
-	returnMessageBase = {},
-} = JSON.parse(localStorage.textSelectorData || '{}');
+chrome.storage.local.get({
+	textSelectorData: {},
+}, result => {
+	const {
+		linkTexts = [],
+		returnMessageBase = {},
+	} = result.textSelectorData;
 
-const list_container = document.getElementById('list_container');
+	const list_container = document.getElementById('list_container');
 
-if (linkTexts.length === 0) {
-	window.close();
-} else {
+	if (linkTexts.length === 0) {
+		window.close();
+		return;
+	}
 	linkTexts.forEach(linkText => {
 		const listItem = document.createElement('li');
 
@@ -20,13 +24,12 @@ if (linkTexts.length === 0) {
 				text: linkText,
 			});
 			chrome.runtime.sendMessage(message);
-			window.close();
 		});
 
 		listItem.append(selectButton);
 		list_container.append(listItem);
 	});
-}
+});
 
 document.getElementById('close').addEventListener('click', () => {
 	window.close();
