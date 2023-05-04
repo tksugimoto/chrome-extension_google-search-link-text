@@ -62,9 +62,11 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 	if (request.method === 'selectedLinkText') {
 		const linkText = request.text;
 		const searchUrl = generateSearchUrl(linkText);
-		chrome.tabs.create({
-			url: searchUrl,
-			openerTabId: request.originalSenderTabid, // chrome.tabs.onCreatedのloadingでは時差がある
+		chrome.tabs.remove(sender.tab.id).then(() => {
+			chrome.tabs.create({
+				url: searchUrl,
+				openerTabId: request.originalSenderTabid, // chrome.tabs.onCreatedのloadingでは時差がある
+			});
 		});
 	} else if (request.method === 'linkTexts') {
 		const linkTexts = request.texts;

@@ -24,7 +24,6 @@ chrome.storage.local.get({
 				text: linkText,
 			});
 			chrome.runtime.sendMessage(message);
-			window.close();
 		});
 
 		listItem.append(selectButton);
