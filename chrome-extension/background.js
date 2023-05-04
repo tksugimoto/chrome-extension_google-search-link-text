@@ -69,17 +69,20 @@ chrome.runtime.onMessage.addListener((request, sender) => {
 				openerTabId: sender.tab.id, // chrome.tabs.onCreatedのloadingでは時差がある
 			});
 		} else if (linkTexts.length >= 2) {
-			localStorage.textSelectorData = JSON.stringify({
-				linkTexts,
-				returnMessageBase: {
-					method: 'selectedLinkText',
-					originalSenderTabid: sender.tab.id,
+			chrome.storage.local.set({
+				textSelectorData: {
+					linkTexts,
+					returnMessageBase: {
+						method: 'selectedLinkText',
+						originalSenderTabid: sender.tab.id,
+					},
 				},
-			});
-			chrome.windows.create({
-				url: 'text_selector.html',
-				type: 'popup',
-				state: 'fullscreen',
+			}, () => {
+				chrome.windows.create({
+					url: 'text_selector.html',
+					type: 'popup',
+					state: 'fullscreen',
+				});
 			});
 		}
 	}

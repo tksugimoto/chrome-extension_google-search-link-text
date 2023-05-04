@@ -10,6 +10,7 @@
 	},
 
 	"permissions": [
+		"storage",
 		"contextMenus",
 		"activeTab"
 	],
